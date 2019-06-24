@@ -13,7 +13,7 @@ Repo Containting Themes For the Nexus Wallet
 
 Rules will be strict and Nexus reserves the right to Reject or Remove your theme at any time or for any reason.
 
-DO NOT SUBMIT A THEME WITH A IMAGE, URL ONLY, THEY WILL BE REJECTED
+DO NOT SUBMIT A THEME WITH A IMAGE (`bg.png`, etc.), URL ONLY, THEY WILL BE REJECTED.
 
 MODIFTY ANY OTHER FILE WILL RESULT IN REJECTION UNLESS OPENED SEPARATLY, IF THERE IS A ISSUE OPEN A ISSUE.
 
