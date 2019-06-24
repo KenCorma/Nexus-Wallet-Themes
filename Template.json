@@ -1,0 +1,16 @@
+/*
+    Template
+    Remove These lines before use
+    All fields below are optonal, use as many or as few as you like
+*/
+{
+  "wallpaper": "https://google.com/banner.jpg",
+  "background": "#000000",
+  "foreground": "#000000",
+  "primary": "#000000",
+  "primaryAccent": "#000000",
+  "danger": "#000000",
+  "globeColor": "#000000",
+  "globePillarColor": "#000000",
+  "globeArchColor": "#000000"
+}
