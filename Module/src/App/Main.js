@@ -2,13 +2,16 @@ import {
   showConnections,
   hideConnections,
   updateInput,
-} from 'actions/actionCreators';
+  setAvailableThemes
+} from "actions/actionCreators";
+
+import ThemeButton from "./ThemeButton";
 
 const {
   libraries: {
     React,
     ReactRedux: { connect },
-    emotion: { styled },
+    emotion: { styled }
   },
   components: { GlobalStyles, Panel, Switch, Tooltip, TextField, Button },
   utilities: {
@@ -17,11 +20,19 @@ const {
     onceRpcReturn,
     showErrorDialog,
     showSuccessDialog,
-  },
+    proxyRequest
+  }
 } = NEXUS;
 
 const DemoTextField = styled(TextField)({
-  maxWidth: 400,
+  maxWidth: 400
+});
+
+const ThemeList = styled.div({
+  padding: "0.5rem 1rem 0rem 1rem",
+  flexGrow: 1,
+  flexBasis: "35em",
+  overflow: "auto"
 });
 
 @connect(
@@ -29,15 +40,20 @@ const DemoTextField = styled(TextField)({
     coreInfo: state.coreInfo,
     showingConnections: state.settings.showingConnections,
     inputValue: state.ui.inputValue,
+    availableThemes: state.general.availableThemes
   }),
-  { showConnections, hideConnections, updateInput }
+  { showConnections, hideConnections, updateInput, setAvailableThemes }
 )
 class Main extends React.Component {
+  componentDidMount() {
+    this.test();
+  }
+
   confirmToggle = async () => {
     const { showingConnections, showConnections, hideConnections } = this.props;
     const question = showingConnections
-      ? 'Hide number of connections?'
-      : 'Show number of connections?';
+      ? "Hide number of connections?"
+      : "Show number of connections?";
 
     const agreed = await confirm({ question });
     if (agreed) {
@@ -53,62 +69,55 @@ class Main extends React.Component {
     this.props.updateInput(e.target.value);
   };
 
+  async test() {
+    try {
+      const result = await proxyRequest(
+        "https://api.github.com/repos/KenCorma/Nexus-Wallet-Themes/contents/Themes",
+        { responseType: "json" }
+      );
+      console.error(result);
+      const asdgh = result.data.map(Element => {
+        return { name: Element.name, url: Element.download_url };
+      });
+
+      console.log(asdgh);
+      this.props.setAvailableThemes(asdgh);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   getDifficulty = async () => {
     try {
-      const response = await rpcCall('getdifficulty', [[]]);
+      const response = await rpcCall("getdifficulty", [[]]);
       showSuccessDialog({
-        message: 'Mining difficulty',
-        note: JSON.stringify(response, null, 2),
+        message: "Mining difficulty",
+        note: JSON.stringify(response, null, 2)
       });
     } catch (err) {
       showErrorDialog({
-        message: 'Cannot get difficulty',
+        message: "Cannot get difficulty"
       });
     }
   };
+
+  returnButtons() {
+    const buttons = this.props.availableThemes.map(Element => {
+      return <ThemeButton data={Element} />;
+    });
+    console.log(buttons);
+    return <ThemeList>{buttons}</ThemeList>;
+  }
 
   render() {
     const { coreInfo, showingConnections, inputValue } = this.props;
     return (
       <Panel
         title="React Module Example"
-        icon={{ url: 'react.svg', id: 'icon' }}
+        icon={{ url: "react.svg", id: "icon" }}
       >
         <GlobalStyles />
-        <div>
-          This showcases how a Nexus Wallet Modules can interact with the base
-          wallet.
-        </div>
-
-        <div className="mt2 flex center">
-          Show number of connections&nbsp;&nbsp;
-          <Tooltip.Trigger
-            position="right"
-            tooltip="This setting will be remembered even when the wallet is restarted"
-          >
-            <Switch
-              checked={showingConnections}
-              onChange={this.confirmToggle}
-            />
-          </Tooltip.Trigger>
-        </div>
-        {!!showingConnections && <div>Connections: {coreInfo.connections}</div>}
-
-        <div className="mt2">
-          <div>
-            This textbox's content will be remembered even when you navigate
-            away from this module
-          </div>
-          <DemoTextField
-            value={inputValue}
-            onChange={this.handleChange}
-            placeholder="Type anything here"
-          />
-        </div>
-
-        <div className="mt2">
-          <Button onClick={this.getDifficulty}>View mining difficulty</Button>
-        </div>
+        {this.returnButtons()}
       </Panel>
     );
   }
