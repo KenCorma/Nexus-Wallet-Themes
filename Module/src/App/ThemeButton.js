@@ -1,4 +1,5 @@
 import FileSaver from "file-saver";
+import { toggleThemePreview, setSelectedTheme } from "actions/actionCreators";
 
 const {
   libraries: {
@@ -25,13 +26,40 @@ const ThemeButtonContainer = styled.div(({ theme }) => ({
   }
 }));
 
+const PreviewImage = styled.img({
+  height: "50px",
+  width: "50px"
+});
+
+@connect(
+  state => ({
+    general: state.general
+  }),
+  { toggleThemePreview, setSelectedTheme }
+)
 class ThemeButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      themeJson: {}
+    };
+  }
   clickSaveFile() {
     FileSaver.saveAs(this.props.data.url, "theme.json");
   }
 
-  clickPressPreview() {
-    console.log("Preview");
+  async clickPressPreview() {
+    try {
+      const result = await proxyRequest(this.props.data.url, {
+        responseType: "json"
+      });
+      console.log(result);
+      this.setState({
+        themeJson: result.data
+      });
+      this.props.setSelectedTheme(result.data);
+      this.props.toggleThemePreview(true);
+    } catch (e) {}
   }
 
   render() {
@@ -51,6 +79,9 @@ class ThemeButton extends React.Component {
         <Button style={{ width: "6em" }} onClick={() => this.clickSaveFile()}>
           {"Download"}
         </Button>
+        {this.state.themeJson.wallpaper ? (
+          <PreviewImage src={this.state.themeJson.wallpaper} />
+        ) : null}
       </ThemeButtonContainer>
     );
   }

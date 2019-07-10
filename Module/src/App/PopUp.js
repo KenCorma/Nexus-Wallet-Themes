@@ -10,6 +10,9 @@ const {
 
 const { keyframes } = core;
 
+import Preview from "./Preview";
+import { toggleThemePreview } from "actions/actionCreators";
+
 const intro = keyframes`
   from { 
     transform: translate(-50%, -50%) scale(0.9);
@@ -36,11 +39,12 @@ const PopUpInternal = styled.div(({ theme }) => ({
   transform: "translate(-50%, -50%)",
   width: "60%",
   maxHeight: "80%",
+  zIndex: 99,
   background: color.darken(theme.background, 0.2),
   color: theme.mixer(0.75),
-  borderRadius: modalBorderRadius,
+  borderRadius: "2px",
   boxShadow: "0 0 20px #000",
-  animation: `${intro} ${timing.quick} ease-out`,
+  animation: `${intro} 200ms ease-out`,
   animationFillMode: "both",
   display: "grid",
   gridTemplateAreas: '"header" "body" "footer"',
@@ -48,11 +52,23 @@ const PopUpInternal = styled.div(({ theme }) => ({
   gridTemplateRows: "auto 1fr auto"
 }));
 
+@connect(
+  state => ({
+    general: state.general
+  }),
+  { toggleThemePreview }
+)
 class PopUp extends React.Component {
+  onClose = e => {
+    this.props.toggleThemePreview(false);
+  };
+
   render() {
     return (
       <PopUpInternal>
-        <div>{"TEST"}</div>
+        <div>{"PREVIEW"}</div>
+        <Preview incomingTheme={this.props.incomingTheme} />
+        <Button onClick={this.onClose}> {"Close"}</Button>
       </PopUpInternal>
     );
   }

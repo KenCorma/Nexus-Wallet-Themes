@@ -32,3 +32,13 @@ export const setAvailableThemes = payload => ({
   type: TYPE.SET_AVAILABLE_THEMES,
   payload: payload
 });
+
+export const toggleThemePreview = payload => ({
+  type: TYPE.TOGGLE_PREVIEW,
+  payload: payload
+});
+
+export const setSelectedTheme = payload => ({
+  type: TYPE.SET_SELECTED_THEME,
+  payload: payload
+});

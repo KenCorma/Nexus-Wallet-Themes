@@ -6,6 +6,7 @@ import {
 } from "actions/actionCreators";
 
 import ThemeButton from "./ThemeButton";
+import PopUp from "./PopUp";
 
 const {
   libraries: {
@@ -40,7 +41,9 @@ const ThemeList = styled.div({
     coreInfo: state.coreInfo,
     showingConnections: state.settings.showingConnections,
     inputValue: state.ui.inputValue,
-    availableThemes: state.general.availableThemes
+    availableThemes: state.general.availableThemes,
+    openPreview: state.general.openPreview,
+    selectedTheme: state.general.selectedTheme
   }),
   { showConnections, hideConnections, updateInput, setAvailableThemes }
 )
@@ -112,11 +115,11 @@ class Main extends React.Component {
   render() {
     const { coreInfo, showingConnections, inputValue } = this.props;
     return (
-      <Panel
-        title="React Module Example"
-        icon={{ url: "react.svg", id: "icon" }}
-      >
+      <Panel title="Wallet Theme List" icon={{ url: "react.svg", id: "icon" }}>
         <GlobalStyles />
+        {this.props.openPreview ? (
+          <PopUp incomingTheme={this.props.selectedTheme} />
+        ) : null}
         {this.returnButtons()}
       </Panel>
     );
