@@ -1,0 +1,15 @@
+{
+  "name": "nexus_theme_list",
+  "displayName": "Nexus Theme List",
+  "version": "0.1.0",
+  "specVersion": "0.1.0",
+  "description": "Lists and Previews Themes Submited by Users",
+  "type": "app",
+  "entry": "dist/index.html",
+  "icon": "dist/react.svg",
+  "files": ["dist/index.html", "dist/react.svg", "dist/js/app.js"],
+  "author": {
+    "name": "Kendal Cormany",
+    "email": "kendal.cormany@nexus.io"
+  }
+}
